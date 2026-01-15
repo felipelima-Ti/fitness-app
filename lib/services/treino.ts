@@ -1,28 +1,28 @@
-import { addDoc, collection, Timestamp } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+"use client";
 
-export interface Treino {
-  id: string;
+import { db } from "@/lib/firebase";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { auth } from "@/lib/firebase";
+
+export type Treino = {
+  id?: string;
   exercicio: string;
   duracao: number;
   calorias: number;
-  uid: string;
   createdAt: Timestamp;
-}
+  userId: string;
+};
 
-export async function salvarTreino(treino: {
+export async function salvarTreino(data: {
   exercicio: string;
   duracao: number;
   calorias: number;
 }) {
   const user = auth.currentUser;
-
-  if (!user) {
-    throw new Error("Usuário não autenticado");
-  }
+  if (!user) throw new Error("Usuário não autenticado");
 
   await addDoc(collection(db, "treinos"), {
-    ...treino,
+    ...data,
     userId: user.uid,
     createdAt: Timestamp.now(),
   });
