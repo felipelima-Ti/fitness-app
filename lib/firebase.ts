@@ -3,15 +3,16 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+  apiKey: "AIzaSyAMQyKRaQkXLvpYleSzXZgHZZwcF2IyjEk",
+  authDomain: "fitness-app-6f093.firebaseapp.com",
+  projectId: "fitness-app-6f093",
+  storageBucket: "fitness-app-6f093.appspot.com",
+  messagingSenderId: "471526500657",
+  appId: "1:471526500657:web:36f5cbfa1032385d726810",
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
+console.log("🔥 Firebase conectado:", app.options.projectId);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
