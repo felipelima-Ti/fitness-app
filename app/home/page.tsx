@@ -268,22 +268,21 @@ function nomeDoDia(data: string) {
       <CardContent className="p-6">
         <section id="treinos"></section>
       <h2 className="text-lg font-semibold mb-4">Meus Treinos</h2>
-      <div className="flex gap-4 mb-4">
+      <div className="flex gap-2 mb-4">
   <input
     placeholder="Buscar exercício"
     className="p-2 border rounded w-33"
     value={buscaNome}
     onChange={(e) => setBuscaNome(e.target.value)}
   />
-<label className="flex items-center gap-0">
-    Data
-  </label>
+  <br></br>
+
   <input
     type="date"
     className="p-2 border rounded w-33"
     value={dataInicio}
     onChange={(e) => setDataInicio(e.target.value)}
-    placeholder="Data"
+    placeholder="data"
   />
 </div>
 <ul className="space-y-2 mb-50">
