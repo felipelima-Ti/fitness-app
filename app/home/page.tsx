@@ -181,39 +181,37 @@ function nomeDoDia(data: string) {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-black text-white px-6 py-4 flex justify-between items-center">
+    <header className="bg-black text-white px-6 py-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">MFitness</h1>
         <nav className="flex gap-5 text-sm">
-          <button className="flex items-center gap-1">
+      <button className="flex items-center gap-1">
             <Dumbbell size={16} /> <Link href="#treinos">Treinos</Link>
-            
           </button>
-          <button className="flex items-center gap-1">
+      <button className="flex items-center gap-1">
             <Calendar size={16} /> <Link href="#semanal">Semana</Link>
           </button>
-          <button className="flex items-center gap-1">
-            <User size={16} /> <Link href="/profile">Perfil</Link>
-          </button>
+      <button className="flex items-center gap-1">
+          <User size={16} /> <Link href="/profile">Perfil</Link>
+        </button>
         </nav>
       </header>
 
       {/* Main */}
       <main className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Registro de Treino */}
-         <Card className="md:col-span-2 rounded-2xl shadow text-black">
-          <CardContent className="p-6">
-            <h2 className="text-lg font-semibold mb-4">
-              Registro de Treino
-            </h2>
+        <Card className="md:col-span-2 rounded-2xl shadow text-black">
+        <CardContent className="p-6">
+          <h2 className="text-lg font-semibold mb-4">
+            Registro de Treino
+          </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-white">
-              <input
-                placeholder="Exercício"
-                className="p-2 rounded border-2"
-                value={exercicio}
-                onChange={(e) => setExercicio(e.target.value)}
-              />
-
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-white">
+          <input
+            placeholder="Exercício"
+            className="p-2 rounded border-2"
+            value={exercicio}
+            onChange={(e) => setExercicio(e.target.value)}
+          />
               <select
                 className="p-2 rounded border-2"
                 value={met}
@@ -225,52 +223,52 @@ function nomeDoDia(data: string) {
                 <option value={10}>HIIT</option>
               </select>
 
-              <input
-                placeholder="Seu Peso (kg)"
-                type="number"
-                className="p-2 rounded border-2"
-                value={peso}
-                onChange={(e) => setPeso(e.target.value)}
-              />
+          <input
+            placeholder="Seu Peso (kg)"
+            type="number"
+            className="p-2 rounded border-2"
+            value={peso}
+            onChange={(e) => setPeso(e.target.value)}
+          />
 
-              <input
-                placeholder="Duração (min)"
-                type="number"
-                className="p-2 rounded border-2"
-                value={duracao}
-                onChange={(e) => setDuracao(e.target.value)}
-              />
-            </div>
+          <input
+            placeholder="Duração (min)"
+            type="number"
+            className="p-2 rounded border-2"
+            value={duracao}
+            onChange={(e) => setDuracao(e.target.value)}
+          />
+        </div>
 
-            <div className="text-center">
-              <Button
-                onClick={handleSalvarTreino}
-                disabled={loading}
-                className="mt-4 bg-black text-white"
-              >
-                {loading ? "Salvando..." : "Salvar Treino"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="text-center">
+          <Button
+            onClick={handleSalvarTreino}
+            disabled={loading}
+            className="mt-4 bg-black text-white"
+           >
+            {loading ? "Salvando..." : "Salvar Treino"}
+          </Button>
+      </div>
+    </CardContent>
+  </Card>
 
         {/* Calorias Hoje */}
-        <Card className="rounded-2xl shadow text-black">
-          <CardContent className="p-6 flex flex-col items-center justify-center">
-            <Flame size={32} className="text-red-500" />
-            <p className="text-sm mt-2">Calorias Queimadas Hoje</p>
-            <h3 className="text-3xl font-bold">
-              {caloriasHoje} kcal
-            </h3>
-          </CardContent>
-        </Card>
+<Card className="rounded-2xl shadow text-black">
+    <CardContent className="p-6 flex flex-col items-center justify-center">
+    <Flame size={32} className="text-red-500" />
+    <p className="text-sm mt-2">Calorias Queimadas Hoje</p>
+  <h3 className="text-3xl font-bold">
+    {caloriasHoje} kcal
+  </h3>
+    </CardContent>
+</Card>
 
-        {/* Acompanhamento Semanal */}
-        <Card className="md:col-span-3 rounded-2xl shadow text-black mb-30">
-          <CardContent className="p-6">
-            <section id="treinos"></section>
-            <h2 className="text-lg font-semibold mb-4">Meus Treinos</h2>
-          <div className="flex gap-4 mb-4">
+{/* Acompanhamento Semanal */}
+      <Card className="md:col-span-3 rounded-2xl shadow text-black mb-30">
+      <CardContent className="p-6">
+        <section id="treinos"></section>
+      <h2 className="text-lg font-semibold mb-4">Meus Treinos</h2>
+      <div className="flex gap-4 mb-4">
   <input
     placeholder="Buscar exercício"
     className="p-2 border rounded w-33"
@@ -352,18 +350,18 @@ function nomeDoDia(data: string) {
       {treinosDoDia.length === 0 ? (
         <p>Nenhum treino registrado nesse dia.</p>
       ) : (
-        <ul className="space-y-2">
-          {treinosDoDia.map((t) => (
-            <li
-              key={t.id}
-              className="border p-2 rounded bg-gray-50"
-            >
-              <strong>{t.exercicio}</strong>
-              <br />
-              Calorias: {t.calorias} kcal
-              <br />
-              Duração: {t.duracao} min
-            </li>
+      <ul className="space-y-2">
+        {treinosDoDia.map((t) => (
+         <li
+          key={t.id}
+          className="border p-2 rounded bg-gray-50"
+           >
+            <strong>{t.exercicio}</strong>
+            <br />
+            Calorias: {t.calorias} kcal
+            <br />
+            Duração: {t.duracao} min
+          </li>
           ))}
         </ul>
       )}
