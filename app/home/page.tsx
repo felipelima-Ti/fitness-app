@@ -275,12 +275,15 @@ function nomeDoDia(data: string) {
     value={buscaNome}
     onChange={(e) => setBuscaNome(e.target.value)}
   />
-
+<label className="flex items-center gap-0">
+    Data
+  </label>
   <input
     type="date"
     className="p-2 border rounded w-33"
     value={dataInicio}
     onChange={(e) => setDataInicio(e.target.value)}
+    placeholder="Data"
   />
 </div>
 <ul className="space-y-2 mb-50">
