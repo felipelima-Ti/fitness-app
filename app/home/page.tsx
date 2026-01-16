@@ -121,6 +121,7 @@ async function handleExcluirTreino(id: string, calorias: number) {
   dataFim
 );
   const semana = calcularSemana(treinos);
+  const totalSemana = calcularTotalSemana(semana);
   
   async function handleSalvarTreino() {
      if (!exercicio || !peso || !duracao) {
@@ -195,7 +196,9 @@ function ordenarSemana(semanaObj: Record<string, number>) {
     return ordem.indexOf(diaA) - ordem.indexOf(diaB);
   });
 }
-
+function calcularTotalSemana(semanaObj: Record<string, number>) {
+  return Object.values(semanaObj).reduce((total, atual) => total + atual, 0);
+}
  
   return (
     <div className="min-h-screen bg-gray-100">
@@ -336,6 +339,9 @@ function ordenarSemana(semanaObj: Record<string, number>) {
           <h2 className="text-lg font-semibold mb-4">
   Acompanhamento Semanal
 </h2>
+<p className="text-xm mb-4">
+  Total na semana : <b>{totalSemana} kcal</b>
+</p>
 
 <div className="grid grid-cols-2 md:grid-cols-7 gap-3 text-center border-20 bg-gray-300 border-gray-300">
   {ordenarSemana(semana).map(([data, calorias]) => (
