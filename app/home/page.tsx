@@ -13,6 +13,7 @@ import { buscarTodosTreinos } from "@/lib/services/busca";
 import { calcularSemana } from "@/lib/utils/semana";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { excluirTreino } from "@/lib/services/excluirTreino";
 
 export default function Home() {
 
@@ -52,6 +53,22 @@ useEffect(() => {
 
   carregarTreinos();
 }, []);
+async function handleExcluirTreino(id: string, calorias: number) {
+  if (!confirm("Deseja realmente excluir este treino?")) return;
+
+  try {
+    await excluirTreino(id);
+
+    setTreinos((prev) => prev.filter((t) => t.id !== id));
+
+    setCaloriasHoje((prev) => Math.max(0, prev - calorias));
+
+    alert("Treino excluído com sucesso");
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao excluir treino");
+  }
+}
   const [exercicio, setExercicio] = useState("");
   const [peso, setPeso] = useState("");
   const [duracao, setDuracao] = useState("");
@@ -215,17 +232,25 @@ useEffect(() => {
       key={treino.id}
       className="bg-white p-3 rounded shadow border"
     >
-      <strong>Nome do Treino:</strong> {treino.exercicio}{" "}
-      <br></br>
-      <strong>Perda:</strong> {treino.calorias} kcal 
-      <br></br>  
-      <strong>Tempo:</strong> {treino.duracao} Minutos   
-      <br />
-      <span className="text-xs text-gray-700">
-        <b>
+     <div>
+    <strong>Nome do Treino:</strong> {treino.exercicio}
+    <br />
+    <strong>Perda:</strong> {treino.calorias} kcal
+    <br />
+    <strong>Tempo:</strong> {treino.duracao} Minutos
+    <br />
+    <span className="text-xs text-gray-700">
+      <b>
         Data: {treino.createdAt.toDate().toLocaleDateString()}
-        </b>
-      </span>
+      </b>
+    </span>
+  </div>
+<button
+  onClick={() => handleExcluirTreino(treino.id, treino.calorias)}
+  className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+>
+  Excluir
+</button>
     </li>
   ))}
 </ul>

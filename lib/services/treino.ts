@@ -5,7 +5,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
 
 export type Treino = {
-  id?: string;
+  id: string;
   exercicio: string;
   duracao: number;
   calorias: number;
