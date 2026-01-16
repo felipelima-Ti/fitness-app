@@ -1,27 +1,27 @@
-import { Treino } from "@/lib/services/treino";
+import type { Treino } from "@/lib/services/treino";
 
 export function filtrarTreinos(
   treinos: Treino[],
   nome: string,
-  data?: string
+  data: string
 ) {
   return treinos.filter((treino) => {
-    const nomeMatch = treino.exercicio
+    const matchNome = treino.exercicio
       .toLowerCase()
       .includes(nome.toLowerCase());
 
-    let dataMatch = true;
+    let matchData = true;
 
     if (data) {
       const dataTreino = treino.createdAt.toDate();
-      const dataFiltro = new Date(data);
 
-      dataMatch =
-        dataTreino.getFullYear() === dataFiltro.getFullYear() &&
-        dataTreino.getMonth() === dataFiltro.getMonth() &&
-        dataTreino.getDate() === dataFiltro.getDate();
+      const dataFormatadaTreino = dataTreino
+        .toISOString()
+        .split("T")[0]; // yyyy-mm-dd
+
+      matchData = dataFormatadaTreino === data;
     }
 
-    return nomeMatch && dataMatch;
+    return matchNome && matchData;
   });
 }

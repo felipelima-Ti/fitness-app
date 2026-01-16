@@ -8,12 +8,44 @@ import { salvarTreino } from "@/lib/services/treino";
 import { calcularCalorias } from "@/lib/calcularcalorias";
 import { buscarCaloriasHoje } from "@/lib/services/buscarTreinos";
 import type { Treino } from "@/lib/services/treino";
-import { filtrarTreinos } from "@/lib/filtro";
 import { buscarTodosTreinos } from "@/lib/services/busca";
 import { calcularSemana } from "@/lib/utils/semana";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { excluirTreino } from "@/lib/services/excluirTreino";
+import Link from "next/link";
+
+export function filtrarTreinosAvancado(
+  treinos: Treino[],
+  nome: string,
+  dataInicio: string,
+  dataFim: string
+) {
+  return treinos.filter((treino) => {
+    const matchNome = treino.exercicio
+      .toLowerCase()
+      .includes(nome.toLowerCase());
+
+    let matchData = true;
+
+    if (dataInicio || dataFim) {
+      const dataTreino = treino.createdAt
+        .toDate()
+        .toISOString()
+        .split("T")[0];
+
+      if (dataInicio && dataTreino < dataInicio) {
+        matchData = false;
+      }
+
+      if (dataFim && dataTreino > dataFim) {
+        matchData = false;
+      }
+    }
+
+    return matchNome && matchData;
+  });
+}
 
 export default function Home() {
 
@@ -75,15 +107,19 @@ async function handleExcluirTreino(id: string, calorias: number) {
   const [met, setMet] = useState(6);
   const [caloriasHoje, setCaloriasHoje] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [calorias, setCalorias] = useState("");
   const [treinos, setTreinos] = useState<Treino[]>([]);
   const [buscaNome, setBuscaNome] = useState("");
-  const [buscaData, setBuscaData] = useState("");
-  const treinosFiltrados = filtrarTreinos(
+  const [modalAberto, setModalAberto] = useState(false);
+  const [diaSelecionado, setDiaSelecionado] = useState("");
+  const [treinosDoDia, setTreinosDoDia] = useState<Treino[]>([]);
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
+  const treinosFiltrados = filtrarTreinosAvancado(
   treinos,
   buscaNome,
-  buscaData
-  );
+  dataInicio,
+  dataFim
+);
   const semana = calcularSemana(treinos);
   
   async function handleSalvarTreino() {
@@ -109,7 +145,6 @@ async function handleExcluirTreino(id: string, calorias: number) {
       // limpa formulário
       setExercicio("");
       setDuracao("");
-      setCalorias("");
       setMet(6);
 
       alert("Treino salvo com sucesso 💪");
@@ -120,21 +155,44 @@ async function handleExcluirTreino(id: string, calorias: number) {
       setLoading(false);
     }
   }
+  function abrirModal(dia: string) {
+  const treinosFiltrados = treinos.filter((t) => {
+    const dataTreino = t.createdAt
+      .toDate()
+      .toLocaleDateString();
 
+    return dataTreino === dia;
+  });
+
+  setDiaSelecionado(dia);
+  setTreinosDoDia(treinosFiltrados);
+  setModalAberto(true);
+}
+function nomeDoDia(data: string) {
+  const [dia, mes, ano] = data.split("/").map(Number);
+
+  const date = new Date(ano, mes - 1, dia);
+
+  return date.toLocaleDateString("pt-BR", {
+    weekday: "long",
+  });
+}
+ 
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-black text-white px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">MyFitness</h1>
-        <nav className="flex gap-6 text-sm">
+        <h1 className="text-xl font-bold">MFitness</h1>
+        <nav className="flex gap-5 text-sm">
           <button className="flex items-center gap-1">
-            <Dumbbell size={16} /> Treinos
+            <Dumbbell size={16} /> <Link href="#treinos">Treinos</Link>
+            
           </button>
           <button className="flex items-center gap-1">
-            <Calendar size={16} /> Semanal
+            <Calendar size={16} /> <Link href="#semanal">Semana</Link>
           </button>
           <button className="flex items-center gap-1">
-            <User size={16} /> Perfil
+            <User size={16} /> <Link href="/profile">Perfil</Link>
           </button>
         </nav>
       </header>
@@ -208,22 +266,23 @@ async function handleExcluirTreino(id: string, calorias: number) {
         </Card>
 
         {/* Acompanhamento Semanal */}
-        <Card className="md:col-span-3 rounded-2xl shadow text-black">
+        <Card className="md:col-span-3 rounded-2xl shadow text-black mb-30">
           <CardContent className="p-6">
+            <section id="treinos"></section>
             <h2 className="text-lg font-semibold mb-4">Meus Treinos</h2>
-            <div className="flex gap-4 mb-4">
+          <div className="flex gap-4 mb-4">
   <input
     placeholder="Buscar exercício"
-    className="p-2 border rounded"
+    className="p-2 border rounded w-33"
     value={buscaNome}
     onChange={(e) => setBuscaNome(e.target.value)}
   />
 
   <input
     type="date"
-    className="p-2 border rounded w-34"
-    value={buscaData}
-    onChange={(e) => setBuscaData(e.target.value)}
+    className="p-2 border rounded w-33"
+    value={dataInicio}
+    onChange={(e) => setDataInicio(e.target.value)}
   />
 </div>
 <ul className="space-y-2 mb-50">
@@ -254,28 +313,70 @@ async function handleExcluirTreino(id: string, calorias: number) {
     </li>
   ))}
 </ul>
+<section id="semanal"></section>
           <h2 className="text-lg font-semibold mb-4">
   Acompanhamento Semanal
 </h2>
 
-<div className="grid grid-cols-2 md:grid-cols-7 gap-3 text-center">
-  {Object.entries(semana).map(([dia, calorias]) => (
-    <div
-      key={dia}
-      className="bg-white rounded-xl p-3 shadow-sm"
-    >
-      <p className="text-sm font-medium">{dia}</p>
-      <p className="text-xs text-gray-500">
-        {calorias > 0 ? "Treino" : "Descanso"}
-      </p>
-      <p className="text-sm font-semibold">
-        {calorias} kcal
-      </p>
-    </div>
+<div className="grid grid-cols-2 md:grid-cols-7 gap-3 text-center border-20 bg-gray-300 border-gray-300">
+ {Object.entries(semana).map(([data, calorias]) => (
+ <div
+  key={data}
+  className="bg-white rounded-xl p-3 shadow-sm cursor-pointer hover:bg-gray-100"
+  onClick={() => abrirModal(data)}
+>
+  <p className="text-sm font-medium capitalize">
+    {nomeDoDia(data)}
+  </p>
+
+  <p className="text-xs text-gray-500">
+    {calorias > 0 ? "Treino" : "Descanso"}
+  </p>
+
+  <p className="text-sm font-semibold">
+    {calorias} kcal
+  </p>
+</div>
   ))}
+ 
 </div>
           </CardContent>
         </Card>
+         {modalAberto && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-xl w-[90%] md:w-[500px]">
+      <h2 className="text-lg font-bold mb-4">
+        Treinos do dia {diaSelecionado}
+      </h2>
+
+      {treinosDoDia.length === 0 ? (
+        <p>Nenhum treino registrado nesse dia.</p>
+      ) : (
+        <ul className="space-y-2">
+          {treinosDoDia.map((t) => (
+            <li
+              key={t.id}
+              className="border p-2 rounded bg-gray-50"
+            >
+              <strong>{t.exercicio}</strong>
+              <br />
+              Calorias: {t.calorias} kcal
+              <br />
+              Duração: {t.duracao} min
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <button
+        onClick={() => setModalAberto(false)}
+        className="mt-4 bg-black text-white px-4 py-2 rounded"
+      >
+        Fechar
+      </button>
+    </div>
+  </div>
+)}
       </main>
     </div>
   );
