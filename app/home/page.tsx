@@ -177,6 +177,25 @@ function nomeDoDia(data: string) {
     weekday: "long",
   });
 }
+function ordenarSemana(semanaObj: Record<string, number>) {
+  const ordem = [
+    "domingo",
+    "segunda-feira",
+    "terça-feira",
+    "quarta-feira",
+    "quinta-feira",
+    "sexta-feira",
+    "sábado",
+  ];
+
+  return Object.entries(semanaObj).sort(([dataA], [dataB]) => {
+    const diaA = nomeDoDia(dataA);
+    const diaB = nomeDoDia(dataB);
+
+    return ordem.indexOf(diaA) - ordem.indexOf(diaB);
+  });
+}
+
  
   return (
     <div className="min-h-screen bg-gray-100">
@@ -319,26 +338,25 @@ function nomeDoDia(data: string) {
 </h2>
 
 <div className="grid grid-cols-2 md:grid-cols-7 gap-3 text-center border-20 bg-gray-300 border-gray-300">
- {Object.entries(semana).map(([data, calorias]) => (
- <div
-  key={data}
-  className="bg-white rounded-xl p-3 shadow-sm cursor-pointer hover:bg-gray-100"
-  onClick={() => abrirModal(data)}
->
-  <p className="text-sm font-medium capitalize">
-    {nomeDoDia(data)}
-  </p>
+  {ordenarSemana(semana).map(([data, calorias]) => (
+    <div
+      key={data}
+      className="bg-white rounded-xl p-3 shadow-sm cursor-pointer hover:bg-gray-100"
+      onClick={() => abrirModal(data)}
+    >
+      <p className="text-sm font-medium capitalize">
+        {nomeDoDia(data)}
+      </p>
 
-  <p className="text-xs text-gray-500">
-    {calorias > 0 ? "Treino" : "Descanso"}
-  </p>
+      <p className="text-xs text-gray-500">
+        {calorias > 0 ? "Treino" : "Descanso"}
+      </p>
 
-  <p className="text-sm font-semibold">
-    {calorias} kcal
-  </p>
-</div>
+      <p className="text-sm font-semibold">
+        {calorias} kcal
+      </p>
+    </div>
   ))}
- 
 </div>
           </CardContent>
         </Card>
