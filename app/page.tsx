@@ -1,100 +1,112 @@
 "use client";
 
-import { useState } from "react";
-import { registrarUsuario, loginUsuario } from "@/lib/services/auth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Dumbbell, Flame, Calendar, ChartBar, Trophy, User } from "lucide-react";
+import Link from "next/link";
 
-import { useRouter } from "next/navigation";
-
-
-
-export default function Login() {
-  const [modoCadastro, setModoCadastro] = useState(false);
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [nome, setNome] = useState("");
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  async function handleSubmit() {
-  if (!email || !senha || (modoCadastro && !nome)) {
-    alert("Preencha todos os campos");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    if (modoCadastro) {
-      await registrarUsuario(email, senha, nome);
-      router.push("/home"); 
-    } else {
-      await loginUsuario(email, senha);
-      router.push("/home"); 
-    }
-  } catch (err: any) {
-    alert(err.message);
-  } finally {
-    setLoading(false);
-  }
-}
+export default function Landing() {
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md shadow-xl rounded-2xl">
-        <CardContent className="p-6 space-y-4">
-          <h1 className="text-2xl font-bold text-center">
-            {modoCadastro ? "Criar Conta" : "Entrar"}
-          </h1>
+    <div className="bg-gradient-to-b from-gray-900 to-black text-white">
+      
+      {/* HERO */}
+      <section className="text-center py-20 px-6">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          Transforme seu treino em resultado
+        </h1>
 
-          {modoCadastro && (
-            <input
-              placeholder="Nome"
-              className="w-full p-2 border rounded"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-          )}
+        <p className="text-gray-300 max-w-2xl mx-auto mb-8">
+          Acompanhe seus exercícios, calorias e evolução de forma simples e inteligente.
+          O seu personal trainer digital na palma da mão.
+        </p>
 
-          <input
-            placeholder="Email"
-            type="email"
-            className="w-full p-2 border rounded"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <Link href="/login">
+          <button className="bg-green-500 hover:bg-green-600 transition px-8 py-3 rounded-xl text-lg font-semibold">
+            Experimente Agora
+          </button>
+        </Link>
+      </section>
 
-          <input
-            placeholder="Senha"
-            type="password"
-            className="w-full p-2 border rounded"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
+      {/* SERVIÇOS */}
+      <section className="px-6 pb-20">
+        <h2 className="text-2xl font-semibold text-center mb-10">
+          O que você encontra no app
+        </h2>
 
-          <Button
-            className="w-full bg-black text-white"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading
-              ? "Processando..."
-              : modoCadastro
-              ? "Criar Conta"
-              : "Entrar"}
-          </Button>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
-          <p className="text-sm text-center">
-            {modoCadastro ? "Já tem conta?" : "Não tem conta?"}{" "}
-            <button
-              className="text-blue-600 font-semibold"
-              onClick={() => setModoCadastro(!modoCadastro)}
-            >
-              {modoCadastro ? "Entrar" : "Criar conta"}
-            </button>
-          </p>
-        </CardContent>
-      </Card>
+          {/* Card 1 */}
+          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+            <Dumbbell size={32} className="text-green-400 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Registro de Treinos</h3>
+            <p className="text-gray-300">
+              Salve seus exercícios, duração e acompanhe tudo em tempo real.
+            </p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+            <Flame size={32} className="text-red-400 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Cálculo de Calorias</h3>
+            <p className="text-gray-300">
+              Descubra exatamente quantas calorias você queima em cada treino.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+            <Calendar size={32} className="text-blue-400 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Histórico Semanal</h3>
+            <p className="text-gray-300">
+              Veja seu desempenho organizado por dia e acompanhe sua evolução.
+            </p>
+          </div>
+
+          {/* Card 4 */}
+          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+            <ChartBar size={32} className="text-yellow-400 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Relatórios Inteligentes</h3>
+            <p className="text-gray-300">
+              Analise estatísticas e melhore seus resultados com base em dados.
+            </p>
+          </div>
+
+          {/* Card 5 */}
+          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+            <Trophy size={32} className="text-purple-400 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Metas e Conquistas</h3>
+            <p className="text-gray-300">
+              Defina objetivos e acompanhe cada conquista alcançada.
+            </p>
+          </div>
+
+          {/* Card 6 */}
+          <div className="bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition">
+            <User size={32} className="text-teal-400 mb-3" />
+            <h3 className="text-xl font-bold mb-2">Perfil Personalizado</h3>
+            <p className="text-gray-300">
+              Área exclusiva para você acompanhar todo seu progresso.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section className=" items-center justify-center text-center pb-20 flex flex-col items-center justify-center text-center">
+        <div className="w-90 md:w-200 bg-gray-900 rounded-2xl border border-blue-400 p-20">
+        <h3 className="text-4xl font-bold mb-4">
+          Pronto para <b className="text-blue-400">Comecar?</b>
+        </h3>
+        <p className="text-gray-300 mb-8 font-bold">Junte-se a milhares de pessoas que já transformaram suas vidas. Comece sua<br></br>jornada fitness hoje mesmo com 7 dias grátis.</p>
+       
+
+        <Link href="/login">
+          <button className="bg-green-500 hover:bg-green-600 transition px-10 py-4 rounded-xl text-lg font-semibold">
+            Experimente Agora
+          </button>
+        </Link>
+        </div>
+      </section>
+
     </div>
   );
 }
