@@ -4,7 +4,7 @@ import { useState } from "react";
 import { registrarUsuario, loginUsuario } from "@/lib/services/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
+import "./style.css";
 import { useRouter } from "next/navigation";
 
 
@@ -40,8 +40,9 @@ export default function Login() {
   }
 }
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-900 ">
-      <Card className="w-full max-w-md shadow-xl rounded-2xl bg-gray-400 border-4 border-gray-300 m-3">
+   
+  <div className="fundo-academia min-h-screen flex items-center justify-center bg-gray-900 ">
+      <Card className="w-full max-w-120 h-110 shadow-xl rounded-2xl bg-gray-400 border-4 border-gray-300 m-3">
         <CardContent className="p-6 space-y-4">
           <h1 className="text-2xl font-bold text-center">
             {modoCadastro ? "Criar Conta" : "Entrar"}
