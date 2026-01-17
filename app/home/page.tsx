@@ -14,6 +14,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { excluirTreino } from "@/lib/services/excluirTreino";
 import Link from "next/link";
+import { buscarMetas } from "@/lib/services/buscarMetas";
+import { calcularProgressoMeta } from "@/lib/utils/progressoMeta";
+import { excluirMeta } from "@/lib/services/excluirMeta";
 
 export function filtrarTreinosAvancado(
   treinos: Treino[],
@@ -85,6 +88,16 @@ useEffect(() => {
 
   carregarTreinos();
 }, []);
+useEffect(() => {
+  const unsub = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const dadosMetas = await buscarMetas();
+      setMetas(dadosMetas);
+    }
+  });
+
+  return () => unsub();
+}, []);
 async function handleExcluirTreino(id: string, calorias: number) {
   if (!confirm("Deseja realmente excluir este treino?")) return;
 
@@ -101,6 +114,21 @@ async function handleExcluirTreino(id: string, calorias: number) {
     alert("Erro ao excluir treino");
   }
 }
+async function handleExcluirMeta(id: string) {
+  if (!confirm("Deseja realmente excluir esta meta?")) return;
+
+  try {
+    await excluirMeta(id);
+
+    setMetas((prev) => prev.filter((meta) => meta.id !== id));
+
+    alert("Meta excluída com sucesso");
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao excluir meta");
+  }
+}
+
   const [exercicio, setExercicio] = useState("");
   const [peso, setPeso] = useState("");
   const [duracao, setDuracao] = useState("");
@@ -122,6 +150,7 @@ async function handleExcluirTreino(id: string, calorias: number) {
 );
   const semana = calcularSemana(treinos);
   const totalSemana = calcularTotalSemana(semana);
+  const [metas, setMetas] = useState<any[]>([]);
   
   async function handleSalvarTreino() {
      if (!exercicio || !peso || !duracao) {
@@ -201,7 +230,7 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
 }
  
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       {/* Header */}
     <header className="bg-black text-white px-6 py-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">MFitness</h1>
@@ -210,45 +239,45 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
             <Dumbbell size={16} /> <Link href="#treinos">Treinos</Link>
           </button>
       <button className="flex items-center gap-1">
-            <Calendar size={16} /> <Link href="#semanal">Semana</Link>
+            <Calendar size={16} /> <Link href="/metas">Metas</Link>
           </button>
       <button className="flex items-center gap-1">
           <User size={16} /> <Link href="/profile">Perfil</Link>
         </button>
         </nav>
       </header>
-
+<div className="bg-gray-950">
       {/* Main */}
       <main className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Registro de Treino */}
-        <Card className="md:col-span-2 rounded-2xl shadow text-black">
+        <Card className="md:col-span-2 rounded-2xl shadow text-white bg-gray-800">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">
             Registro de Treino
           </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-white">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-gray-800">
           <input
             placeholder="Exercício"
-            className="p-2 rounded border-2"
+            className="p-2 rounded border-1 text-white"
             value={exercicio}
             onChange={(e) => setExercicio(e.target.value)}
           />
               <select
-                className="p-2 rounded border-2"
+                className="p-2 rounded border-1"
                 value={met}
                 onChange={(e) => setMet(Number(e.target.value))}
               >
-                <option value={3.5}>Treino leve</option>
-                <option value={6}>Treino moderado</option>
-                <option value={8}>Treino intensivo</option>
-                <option value={10}>HIIT</option>
+                <option className="text-black" value={3.5}>Treino leve</option>
+                <option className="text-black" value={6}>Treino moderado</option>
+                <option className="text-black" value={8}>Treino intensivo</option>
+                <option className="text-black" value={10}>HIIT</option>
               </select>
 
           <input
             placeholder="Seu Peso (kg)"
             type="number"
-            className="p-2 rounded border-2"
+            className="p-2 rounded border-1 border-white-600"
             value={peso}
             onChange={(e) => setPeso(e.target.value)}
           />
@@ -256,7 +285,7 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
           <input
             placeholder="Duração (min)"
             type="number"
-            className="p-2 rounded border-2"
+            className="p-2 rounded border-1"
             value={duracao}
             onChange={(e) => setDuracao(e.target.value)}
           />
@@ -266,7 +295,7 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
           <Button
             onClick={handleSalvarTreino}
             disabled={loading}
-            className="mt-4 bg-black text-white"
+            className="mt-4 bg-blue-700 text-white hover:bg-blue-600 w-50"
            >
             {loading ? "Salvando..." : "Salvar Treino"}
           </Button>
@@ -275,7 +304,7 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
   </Card>
 
         {/* Calorias Hoje */}
-<Card className="rounded-2xl shadow text-black">
+<Card className="rounded-2xl shadow text-white bg-gray-800">
     <CardContent className="p-6 flex flex-col items-center justify-center">
     <Flame size={32} className="text-red-500" />
     <p className="text-sm mt-2">Calorias Queimadas Hoje</p>
@@ -283,6 +312,75 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
     {caloriasHoje} kcal
   </h3>
     </CardContent>
+</Card>
+<Card className="rounded-2xl shadow text-white bg-gray-800">
+  <CardContent className="p-6">
+    <p className="mt-2 text-lg font-semibold mb-4">Minhas Metas</p>
+
+    {metas.length === 0 ? (
+      <p className="text-sm text-gray-400">
+        Nenhuma meta cadastrada ainda
+      </p>
+    ) : (
+      <div className="space-y-4">
+        {metas.map((meta) => {
+          const {
+            caloriasQueimadas,
+            objetivo,
+            progresso,
+            treinosNoPeriodo,
+          } = calcularProgressoMeta(treinos, meta);
+
+          return (
+            <div
+              key={meta.id}
+              className="bg-gray-900 p-4 rounded-lg border border-gray-700"
+            >
+              <p className="font-bold text-blue-400 text-lg">
+                {meta.nome}
+              </p>
+
+              <p className="text-sm mt-1">
+                📅 {meta.inicio} → {meta.termino}
+              </p>
+
+              <p className="text-sm mt-1">
+                🏋️ Treinos no período: {treinosNoPeriodo}
+              </p>
+
+              <p className="text-sm mt-1">
+                🔥 Progresso: {caloriasQueimadas} / {objetivo} kcal
+              </p>
+
+              {/* BARRA DE PROGRESSO */}
+              <div className="w-full bg-gray-700 rounded-full h-4 mt-3">
+                <div
+                  className="bg-green-500 h-4 rounded-full transition-all duration-500"
+                  style={{ width: `${progresso}%` }}
+                />
+              </div>
+
+              <p className="text-xs mt-2 text-gray-300">
+                {progresso.toFixed(1)}% concluído
+              </p>
+
+              {progresso >= 100 && (
+                <p className="text-green-400 text-sm mt-2 font-semibold">
+                  🎉 Meta concluída parabens!
+                </p>
+              )}
+                <button
+                  onClick={() => handleExcluirMeta(meta.id)}
+                  className="mt-3 bg-red-600 hover:bg-red-700 transition-all duration-300 text-white px-3 py-1 rounded text-sm"
+                >
+                Excluir Meta
+                </button>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </CardContent>
 </Card>
 
 {/* Acompanhamento Semanal */}
@@ -402,6 +500,7 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
   </div>
 )}
       </main>
+      </div>
     </div>
   );
 }
