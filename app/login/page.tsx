@@ -34,7 +34,7 @@ export default function Login() {
       router.push("/home"); 
     }
   } catch (err: any) {
-    alert(err.message);
+    alert("dados incorretos ou ja existe uma conta com esse email");
   } finally {
     setLoading(false);
   }
