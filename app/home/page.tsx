@@ -308,7 +308,25 @@ function formatarTempo(segundos: number) {
 
   setCronometroRodando(false);
 }
- 
+ function fecharModalTreino() {
+  if (cronometroRodando) {
+    const confirmar = confirm(
+      "O cronômetro está rodando. Deseja realmente sair do treino?"
+    );
+
+    if (!confirmar) return;
+
+    if (timerId) {
+      clearInterval(timerId);
+      setTimerId(null);
+    }
+  }
+
+  setModalTreinoAberto(false);
+  setModoTreino(false);
+  setCronometroRodando(false);
+  setTempoAtivo(0);
+}
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -439,7 +457,15 @@ function formatarTempo(segundos: number) {
 
 {modalTreinoAberto && (
   <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-    <div className="bg-gray-900 text-white p-8 rounded-2xl w-[90%] max-w-md text-center">
+    <div className="bg-gray-900 text-white p-8 rounded-2xl w-[90%] max-w-md text-center relative">
+
+      {/* BOTÃO DE FECHAR NO CANTO */}
+      <button
+        onClick={fecharModalTreino}
+        className="absolute top-3 right-3 text-white text-xl hover:text-red-400"
+      >
+        ✕
+      </button>
 
       <h2 className="text-2xl font-bold mb-4">
         Treino em Andamento
@@ -458,6 +484,7 @@ function formatarTempo(segundos: number) {
       </p>
 
       <div className="flex flex-col gap-3">
+
         {!cronometroRodando ? (
           <Button
             onClick={iniciarCronometro}
@@ -470,17 +497,16 @@ function formatarTempo(segundos: number) {
             onClick={pausarCronometro}
             className=" mb-50 bg-yellow-700 hover:bg-yellow-600 w-full"
           >
-            ⏸ Pausar
+             Pausar
           </Button>
         )}
         <Button
           onClick={finalizarTreino}
           className="bg-red-700 hover:bg-red-600 w-full"
         >
-          🛑 Finalizar Treino
+          Finalizar Treino
         </Button>
       </div>
-
     </div>
   </div>
 )}
