@@ -151,6 +151,15 @@ async function handleExcluirMeta(id: string) {
   const semana = calcularSemana(treinos);
   const totalSemana = calcularTotalSemana(semana);
   const [metas, setMetas] = useState<any[]>([]);
+  const [modoTreino, setModoTreino] = useState(false);
+  const [tempoAtivo, setTempoAtivo] = useState(0);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+  const [treinoAtual, setTreinoAtual] = useState({
+  nome: "",
+  intensidade: 6
+  });
+  const [modalTreinoAberto, setModalTreinoAberto] = useState(false);
+  const [cronometroRodando, setCronometroRodando] = useState(false);
   
   async function handleSalvarTreino() {
      if (!exercicio || !peso || !duracao) {
@@ -228,6 +237,77 @@ function ordenarSemana(semanaObj: Record<string, number>) {
 function calcularTotalSemana(semanaObj: Record<string, number>) {
   return Object.values(semanaObj).reduce((total, atual) => total + atual, 0);
 }
+ function iniciarTreino() {
+  if (!treinoAtual.nome) {
+    alert("Digite o nome do treino antes de iniciar");
+    return;
+  }
+
+  setModoTreino(true);
+  setModalTreinoAberto(true);
+  setTempoAtivo(0);
+  setCronometroRodando(false);
+}
+
+async function finalizarTreino() {
+  if (timerId) {
+    clearInterval(timerId);
+  }
+
+  const minutos = Math.ceil(tempoAtivo / 60);
+
+  const caloriasCalculadas = calcularCalorias(
+    Number(peso || 70),
+    minutos,
+    treinoAtual.intensidade
+  );
+
+  try {
+    await salvarTreino({
+      exercicio: treinoAtual.nome,
+      duracao: minutos,
+      calorias: caloriasCalculadas,
+    });
+
+    setCaloriasHoje((prev) => prev + caloriasCalculadas);
+
+    alert(
+      `Treino finalizado!\nDuração: ${minutos} min\nCalorias: ${caloriasCalculadas}`
+    );
+  } catch (error) {
+    alert("Erro ao salvar treino finalizado");
+  }
+
+  setModoTreino(false);
+  setModalTreinoAberto(false);
+  setCronometroRodando(false);
+  setTreinoAtual({ nome: "", intensidade: 6 });
+}
+function formatarTempo(segundos: number) {
+  const m = Math.floor(segundos / 60);
+  const s = segundos % 60;
+
+  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+}
+  function iniciarCronometro() {
+  if (cronometroRodando) return;
+
+  setCronometroRodando(true);
+
+  const id = setInterval(() => {
+    setTempoAtivo((prev) => prev + 1);
+  }, 1000);
+
+  setTimerId(id);
+}
+  function pausarCronometro() {
+  if (timerId) {
+    clearInterval(timerId);
+    setTimerId(null);
+  }
+
+  setCronometroRodando(false);
+}
  
   return (
     <div className="min-h-screen">
@@ -248,8 +328,9 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
       </header>
 <div className="bg-gray-950">
       {/* Main */}
-      <main className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <main className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Registro de Treino */}
+    
         <Card className="md:col-span-2 rounded-2xl shadow text-white bg-gray-800">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">
@@ -302,7 +383,48 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
       </div>
     </CardContent>
   </Card>
+   <Card className="md:col-span-0 rounded-2xl shadow text-white bg-gray-800">
+  <CardContent className="p-6">
 
+    <h2 className="text-lg font-semibold mb-4">
+      Iniciar Novo Treino
+    </h2>
+
+    <input
+      placeholder="Nome do treino"
+      className="p-2 rounded border w-full mb-3 text-white bg-gray-900"
+      value={treinoAtual.nome}
+      onChange={(e) =>
+        setTreinoAtual({ ...treinoAtual, nome: e.target.value })
+      }
+    />
+
+    <select
+      className="p-2 rounded border w-full mb-3 bg-gray-900"
+      value={treinoAtual.intensidade}
+      onChange={(e) =>
+        setTreinoAtual({
+          ...treinoAtual,
+          intensidade: Number(e.target.value),
+        })
+      }
+    >
+      <option value={3.5}>Leve</option>
+      <option value={6}>Moderado</option>
+      <option value={8}>Intenso</option>
+      <option value={10}>HIIT</option>
+    </select>
+
+    <Button
+      onClick={iniciarTreino}
+      className="w-full bg-green-700 hover:bg-green-600"
+    >
+      Iniciar Treino
+    </Button>
+
+  </CardContent>
+</Card>
+ 
         {/* Calorias Hoje */}
 <Card className="rounded-2xl shadow text-white bg-gray-800">
     <CardContent className="p-6 flex flex-col items-center justify-center">
@@ -313,7 +435,57 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
   </h3>
     </CardContent>
 </Card>
-<Card className="rounded-2xl shadow text-white bg-gray-800">
+    
+
+{modalTreinoAberto && (
+  <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+    <div className="bg-gray-900 text-white p-8 rounded-2xl w-[90%] max-w-md text-center">
+
+      <h2 className="text-2xl font-bold mb-4">
+        Treino em Andamento
+      </h2>
+
+      <p className="mb-2 text-lg font-semibold text-blue-400">
+        {treinoAtual.nome}
+      </p>
+
+      <div className="text-5xl font-mono my-6">
+        {formatarTempo(tempoAtivo)}
+      </div>
+
+      <p className="mb-6 text-sm text-gray-400">
+        Intensidade: {treinoAtual.intensidade}
+      </p>
+
+      <div className="flex flex-col gap-3">
+        {!cronometroRodando ? (
+          <Button
+            onClick={iniciarCronometro}
+            className="bg-green-700 hover:bg-green-600 w-full"
+          >
+            ▶ Iniciar Cronômetro
+          </Button>
+        ) : (
+          <Button
+            onClick={pausarCronometro}
+            className=" mb-50 bg-yellow-700 hover:bg-yellow-600 w-full"
+          >
+            ⏸ Pausar
+          </Button>
+        )}
+        <Button
+          onClick={finalizarTreino}
+          className="bg-red-700 hover:bg-red-600 w-full"
+        >
+          🛑 Finalizar Treino
+        </Button>
+      </div>
+
+    </div>
+  </div>
+)}
+
+<Card className=" md:col-span-4 rounded-2xl shadow text-white bg-gray-800">
   <CardContent className="p-6">
     <p className="mt-2 text-lg font-semibold mb-4">Minhas Metas</p>
 
@@ -384,7 +556,7 @@ function calcularTotalSemana(semanaObj: Record<string, number>) {
 </Card>
 
 {/* Acompanhamento Semanal */}
-      <Card className="md:col-span-3 rounded-2xl shadow text-black mb-30">
+      <Card className="md:col-span-4 rounded-2xl shadow text-black mb-30">
       <CardContent className="p-6">
         <section id="treinos"></section>
       <h2 className="text-lg font-semibold mb-4">Meus Treinos</h2>
