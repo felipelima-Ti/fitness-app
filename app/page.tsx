@@ -91,8 +91,8 @@ export default function Landing() {
       </section>
 
       {/* CTA FINAL */}
-      <section className=" items-center justify-center text-center pb-20 flex flex-col items-center justify-center text-center">
-        <div className="w-90 md:w-200 bg-gray-900 rounded-2xl border border-blue-400 p-20">
+      <section className=" pb-20 flex flex-col items-center justify-center text-center">
+        <div className="w-92 md:w-200 bg-gray-900 rounded-2xl border border-blue-400 p-20">
         <h3 className="text-4xl font-bold mb-4">
           Pronto para <b className="text-blue-400">Comecar?</b>
         </h3>
