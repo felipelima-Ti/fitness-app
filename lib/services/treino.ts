@@ -1,7 +1,7 @@
 "use client";
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
+import { collection, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
 import { auth } from "@/lib/firebase";
 
 export type Treino = {
@@ -24,6 +24,6 @@ export async function salvarTreino(data: {
   await addDoc(collection(db, "treinos"), {
     ...data,
     userId: user.uid,
-    createdAt: Timestamp.now(),
+    createdAt:serverTimestamp(),
   });
 }
