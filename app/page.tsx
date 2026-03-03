@@ -96,7 +96,7 @@ export default function Landing() {
         <h3 className="text-4xl font-bold mb-4">
           Pronto para <b className="text-blue-400">Comecar?</b>
         </h3>
-        <p className="text-gray-300 mb-8 font-bold">Junte-se a milhares de pessoas que já transformaram suas vidas. Comece sua<br></br>jornada fitness hoje mesmo com 7 dias grátis.</p>
+        <p className="text-gray-300 mb-8 font-bold">Junte-se a pessoas que já transformaram suas vidas. Comece sua<br></br>jornada fitness hoje mesmo com 7 dias grátis.</p>
        
 
         <Link href="/login">
