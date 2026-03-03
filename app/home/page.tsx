@@ -352,7 +352,7 @@ function formatarTempo(segundos: number) {
         <Card className="md:col-span-2 rounded-2xl shadow text-white bg-gray-800">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">
-            Registro de Treino
+            Registro de treino
           </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-gray-800">

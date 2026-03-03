@@ -42,7 +42,7 @@ export default function Login() {
   return (
    
   <div className="fundo-academia min-h-screen flex items-center justify-center bg-gray-900 ">
-      <Card className="w-full max-w-120 h-110 shadow-xl rounded-2xl bg-gray-400 border-4 border-gray-300 m-3">
+      <Card className="w-full max-w-120 h-110 shadow-xl rounded-2xl bg-gray-100 border-4 border-gray-300 m-3">
         <CardContent className="p-6 space-y-4">
           <h1 className="text-2xl font-bold text-center">
             {modoCadastro ? "Criar Conta" : "Entrar"}
@@ -51,7 +51,7 @@ export default function Login() {
           {modoCadastro && (
             <input
               placeholder="Nome"
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-gray-300 rounded"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
             />
@@ -60,7 +60,7 @@ export default function Login() {
           <input
             placeholder="Email"
             type="email"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-gray-300 rounded"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -68,7 +68,7 @@ export default function Login() {
           <input
             placeholder="Senha"
             type="password"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-gray-300 rounded"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
