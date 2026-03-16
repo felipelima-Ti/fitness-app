@@ -81,13 +81,13 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 h-350">
+    <div className="min-h-screen p-6 h-350 bg-gradient-to-b from-gray-950 to-gray-950 text-white">
       <h1 className="text-2xl font-bold mb-4">
         Perfil do Usuário
       </h1>
 
       <div className="grid md:grid-cols-3 gap-4">
-        <Card>
+        <Card className="bg-gray-800 text-white">
           <CardContent className="p-4">
             <h2 className="font-semibold">Dados</h2>
             <p>Total de treinos: {totalTreinos}</p>
@@ -95,7 +95,7 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gray-800 text-white">
           <CardContent className="p-4">
             <h2 className="font-semibold">Análise</h2>
 
@@ -109,28 +109,27 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gray-800 text-white">
           <CardContent className="p-4">
-            <h2 className="font-semibold">
+            <h2 className="font-semibold mb-4">
              Calorias queimadas Últimos 7 dias
             </h2>
-
-            <Line data={data} />
+            <Line data={data} className="bg-gray-800 rounded" />
           </CardContent>
         </Card>
       </div>
  <div className=" flex grid md:grid-cols-2 gap-4">
-      <Card className="mt-6">
+      <Card className="mt-6 bg-gray-800 ">
         <CardContent className="p-4">
-          <h2 className="text-lg font-semibold mb-2">
+          <h2 className="text-lg font-semibold mb-2 text-white">
             Histórico Completo
           </h2>
-
+      
           <ul className="space-y-2">
             {treinos.map((t) => (
               <li
                 key={t.id}
-                className="border p-2 rounded bg-white"
+                className="border p-2 rounded bg-gray-700 text-white"
               >
                 <strong>{t.exercicio}</strong> –{" "}
                 {t.calorias} kcal – {t.duracao} min
@@ -145,33 +144,33 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
           </ul>
         </CardContent>
           </Card>
-        <Card className="mt-6">
+        <Card className="mt-6 bg-gray-800 text-white">
           <CardContent>
-          <div className="">
-        <div className="gap-2 mb-4 text-lg font-semibold">
-       <p className="mr-2">Busca avançada de treinos</p>
+          <div className="bg-gray-800  rounded text-white">
+            <p className="mr-2 font-semibold mb-7">Busca avançada de treinos</p>
+        <div className="gap-2 mb-4 text-lg bg-gray-700 text-white p-2 rounded border w-70">
  <select
-  className="border-2 border-black p-2 rounded h-11"
+  className=" text-whitep-2 rounded h-11"
   onChange={(e) => setMes(Number(e.target.value))}
 >
-  <option value="">Escolha o mês</option>
-  <option value="0">Janeiro</option>
-  <option value="1">Fevereiro</option>
-  <option value="2">Março</option>
-  <option value="3">Abril</option>
-  <option value="4">Maio</option>
-  <option value="5">Junho</option>
-  <option value="6">Julho</option>
-  <option value="7">Agosto</option>
-  <option value="8">Setembro</option>
-  <option value="9">Outubro</option>
-  <option value="10">Novembro</option>
-  <option value="11">Dezembro</option>
+  <option className="text-black" value="">Escolha o mês</option>
+  <option className="text-black" value="0">Janeiro</option>
+  <option className="text-black" value="1">Fevereiro</option>
+  <option className="text-black" value="2">Março</option>
+  <option className="text-black" value="3">Abril</option>
+  <option className="text-black" value="4">Maio</option>
+  <option className="text-black" value="5">Junho</option>
+  <option className="text-black" value="6">Julho</option>
+  <option className="text-black" value="7">Agosto</option>
+  <option className="text-black" value="8">Setembro</option>
+  <option className="text-black" value="9">Outubro</option>
+  <option className="text-black" value="10">Novembro</option>
+  <option className="text-black" value="11">Dezembro</option>
 </select>
 
  
   {analiseMes && (
-  <Card className="mt-20">
+  <Card className="mt-20 bg-gray-800 text-white">
     <CardContent className="p-4">
       <h2 className="font-semibold text-lg">Resumo do mês</h2>
 
@@ -181,7 +180,7 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
       <p>Maior queima: {analiseMes.maior} kcal</p>
       <ul className="space-y-2 mt-20">
   {treinosMes.map((t) => (
-    <li key={t.id} className="border p-2 rounded bg-white">
+    <li key={t.id} className="border p-2 rounded bg-gray-700 text-white">
       <strong>{t.exercicio}</strong> – {t.calorias} kcal – {t.duracao} min
       <br />
       <span className="text-xs">
@@ -196,7 +195,7 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
 
 </div>
  <button
-    className="bg-black text-white px-4 rounded w-40 h-10 ml-40 mt-10"
+    className="bg-gray-700 text-white px-4 rounded w-60 h-10 mt-5 border"
     onClick={async () => {
   const user = getUsuarioAtual();
   if (!user) {
