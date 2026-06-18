@@ -330,32 +330,74 @@ function formatarTempo(segundos: number) {
   return (
     <div className="min-h-screen">
       {/* Header */}
-    <header className="bg-black text-white px-6 py-4 flex justify-between items-center">
+   <header className="fixed top-0 left-0 w-full bg-black text-white px-6 py-4 flex justify-between items-center z-50">
         <h1 className="text-xl font-bold">MFitness</h1>
         <nav className="flex gap-5 text-sm">
       <button className="flex items-center gap-1">
-            <Dumbbell size={16} /> <Link href="#treinos">Treinos</Link>
+      <Link className="flex" href="#treinos"><Dumbbell className="mr-1" size={16} />Treinos</Link>
           </button>
       <button className="flex items-center gap-1">
-            <Calendar size={16} /> <Link href="/metas">Metas</Link>
+       <Link className="flex" href="/metas"><Calendar className="mr-1" size={16} />Metas</Link>
           </button>
       <button className="flex items-center gap-1">
-          <User size={16} /> <Link href="/profile">Perfil</Link>
+       <Link className="flex" href="/profile"><User className="mr-1" size={16} />Perfil</Link>
         </button>
         </nav>
       </header>
-<div className="bg-gray-950">
+<div className="bg-gray-950 mt-10">
       {/* Main */}
       <main className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Registro de Treino */}
     
-        <Card className="md:col-span-2 rounded-2xl shadow text-white bg-gray-800">
+      
+   <Card className="md:col-span-0 rounded-2xl border-0 shadow text-white bg-gray-900">
+  <CardContent className="p-6">
+
+    <h2 className="text-lg font-semibold mb-4">
+      Iniciar Novo Treino
+    </h2>
+
+    <input
+      placeholder="Nome do treino"
+      className="p-2 rounded border w-full mb-3 text-white bg-gray-900"
+      value={treinoAtual.nome}
+      onChange={(e) =>
+        setTreinoAtual({ ...treinoAtual, nome: e.target.value })
+      }
+    />
+
+    <select
+      className="p-2 rounded border w-full mb-3 bg-gray-900"
+      value={treinoAtual.intensidade}
+      onChange={(e) =>
+        setTreinoAtual({
+          ...treinoAtual,
+          intensidade: Number(e.target.value),
+        })
+      }
+    >
+      <option value={3.5}>Leve</option>
+      <option value={6}>Moderado</option>
+      <option value={8}>Intenso</option>
+      <option value={10}>HIIT</option>
+    </select>
+
+    <Button
+      onClick={iniciarTreino}
+      className="w-full bg-green-700 hover:bg-green-600"
+    >
+      Iniciar Treino
+    </Button>
+
+  </CardContent>
+</Card>
+  <Card className="md:col-span-2 rounded-2xl border-0 shadow text-white bg-gray-900">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">
             Registro de treino
           </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-gray-800">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-gray-900">
           <input
             placeholder="Exercício"
             className="p-2 rounded border-1 text-white"
@@ -401,50 +443,9 @@ function formatarTempo(segundos: number) {
       </div>
     </CardContent>
   </Card>
-   <Card className="md:col-span-0 rounded-2xl shadow text-white bg-gray-800">
-  <CardContent className="p-6">
-
-    <h2 className="text-lg font-semibold mb-4">
-      Iniciar Novo Treino
-    </h2>
-
-    <input
-      placeholder="Nome do treino"
-      className="p-2 rounded border w-full mb-3 text-white bg-gray-900"
-      value={treinoAtual.nome}
-      onChange={(e) =>
-        setTreinoAtual({ ...treinoAtual, nome: e.target.value })
-      }
-    />
-
-    <select
-      className="p-2 rounded border w-full mb-3 bg-gray-900"
-      value={treinoAtual.intensidade}
-      onChange={(e) =>
-        setTreinoAtual({
-          ...treinoAtual,
-          intensidade: Number(e.target.value),
-        })
-      }
-    >
-      <option value={3.5}>Leve</option>
-      <option value={6}>Moderado</option>
-      <option value={8}>Intenso</option>
-      <option value={10}>HIIT</option>
-    </select>
-
-    <Button
-      onClick={iniciarTreino}
-      className="w-full bg-green-700 hover:bg-green-600"
-    >
-      Iniciar Treino
-    </Button>
-
-  </CardContent>
-</Card>
  
         {/* Calorias Hoje */}
-<Card className="rounded-2xl shadow text-white bg-gray-800">
+<Card className="rounded-2xl shadow border-white/20 text-white bg-gray-900">
     <CardContent className="p-6 flex flex-col items-center justify-center">
     <Flame size={32} className="text-red-500" />
     <p className="text-sm mt-2">Calorias Queimadas Hoje</p>
@@ -511,16 +512,17 @@ function formatarTempo(segundos: number) {
   </div>
 )}
 
-<Card className=" md:col-span-4 rounded-2xl shadow text-white bg-gray-800">
+<Card className=" md:col-span-4 rounded-2xl border-0 shadow text-white bg-gray-900">
   <CardContent className="p-6">
-    <p className="mt-2 text-lg font-semibold mb-4">Minhas Metas</p>
-
+    <div className="flex text-center">
+   <Calendar className="text-blue-500"></Calendar> <p className="ml-2 text-lg font-semibold mb-4 text-white/90">Minhas Metas</p>
+  </div>
     {metas.length === 0 ? (
-      <p className="text-sm text-gray-400">
+      <p className="text-center text-xs">
         Nenhuma meta cadastrada ainda
       </p>
     ) : (
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {metas.map((meta) => {
           const {
             caloriasQueimadas,
@@ -530,26 +532,23 @@ function formatarTempo(segundos: number) {
           } = calcularProgressoMeta(treinos, meta);
 
           return (
-            <div
-              key={meta.id}
-              className="bg-gray-900 p-4 rounded-lg border border-gray-700"
-            >
-              <p className="font-bold text-blue-400 text-lg">
+           <div key={meta.id}className=" bg-gray-800 p-4 rounded-lg border border-gray-700 w-full md:w-[600px]">
+              <p className="mb-5 font-bold text-blue-500 text-lg">
                 {meta.nome}
               </p>
-
-              <p className="text-sm mt-1">
-                📅 {meta.inicio} → {meta.termino}
-              </p>
-
-              <p className="text-sm mt-1">
-                🏋️ Treinos no período: {treinosNoPeriodo}
-              </p>
-
-              <p className="text-sm mt-1">
-                🔥 Progresso: {caloriasQueimadas} / {objetivo} kcal
-              </p>
-
+              <div className="flex">
+                <Calendar className="text-blue-500 mr-2 mb-2 "></Calendar><b>{meta.inicio} → {meta.termino}</b>
+              </div>
+              <div className="flex">
+             
+                <Dumbbell className="text-orange-300/50 mr-2 mb-2 "></Dumbbell> <b>{treinosNoPeriodo}</b>
+             
+              </div>
+              <div className="flex">
+      
+                <Flame className="text-red-500 mr-2 mb-2 "></Flame> <b>{caloriasQueimadas} / {objetivo} kcal</b>
+              
+              </div>
               {/* BARRA DE PROGRESSO */}
               <div className="w-full bg-gray-700 rounded-full h-4 mt-3">
                 <div
@@ -582,32 +581,40 @@ function formatarTempo(segundos: number) {
 </Card>
 
 {/* Acompanhamento Semanal */}
-      <Card className="md:col-span-4 rounded-2xl shadow text-black mb-30">
+      <Card className="md:col-span-4 rounded-2xl border-0 shadow text-white mb-30 bg-gray-900">
       <CardContent className="p-6">
         <section id="treinos"></section>
-      <h2 className="text-lg font-semibold mb-4">Meus Treinos</h2>
-      <div className="flex gap-2 mb-4">
+        <div className="flex">
+          <Dumbbell size={25} className="text-orange-300/50 mr-2 " />
+        <h2 className="text-xl font-semibold mb-4">Meus Treinos</h2>
+     </div>
+      <div className="flex flex-col md:flex-row gap-2 mb-4">
+         
+        
+        
+        <p className="mt-2 text-xm font-bold">Buscar Exercicio:</p>
   <input
-    placeholder="Buscar exercício"
-    className="p-2 border rounded w-33"
+    placeholder="Nome do exercicio"
+    className="border-1 border-white/30 p-2 rounded w-33 bg-gray-900 text-white mr-10"
     value={buscaNome}
     onChange={(e) => setBuscaNome(e.target.value)}
   />
-  <br></br>
+
+<p className="mt-2 text-xm font-bold">Buscar Data</p>
 
   <input
     type="date"
-    className="p-2 border rounded w-33"
+    className="p-2 border-1 border-white/30 rounded w-33 bg-gray-900 text-white/50 [color-scheme:dark]"
     value={dataInicio}
     onChange={(e) => setDataInicio(e.target.value)}
     placeholder="data"
   />
 </div>
-<ul className="space-y-2 mb-50">
+<ul className="space-y-2 mb-10">
   {treinosFiltrados.map((treino) => (
     <li
       key={treino.id}
-      className="bg-white p-3 rounded shadow border"
+      className="p-3 rounded shadow  bg-gray-800 mb-10"
     >
      <div>
     <strong>Nome do Treino:</strong> {treino.exercicio}
@@ -616,7 +623,7 @@ function formatarTempo(segundos: number) {
     <br />
     <strong>Tempo:</strong> {treino.duracao} Minutos
     <br />
-    <span className="text-xs text-gray-700">
+    <span className="text-xs text-white/70">
       <b>
         Data: {treino.createdAt.toDate().toLocaleDateString()}
       </b>
@@ -631,19 +638,20 @@ function formatarTempo(segundos: number) {
     </li>
   ))}
 </ul>
-<section id="semanal"></section>
-          <h2 className="text-lg font-semibold mb-4">
+<section id="semanal">
+          <h2 className="text-xl font-semibold mb-4">
   Acompanhamento Semanal
 </h2>
-<p className="text-xm mb-4">
-  Total na semana : <b>{totalSemana} kcal</b>
+<hr className="border-1 border-blue-500"></hr>
+<p className=" mt-5 text-xm mb-4">
+ <b> Total na semana :</b> {totalSemana} kcal
 </p>
 
-<div className="grid grid-cols-2 md:grid-cols-7 gap-3 text-center border-20 bg-gray-300 border-gray-300">
+<div className="rounded-xl grid grid-cols-2 md:grid-cols-7 gap-3 text-center bg-gray-900 ">
   {ordenarSemana(semana).map(([data, calorias]) => (
     <div
       key={data}
-      className="bg-white rounded-xl p-3 shadow-sm cursor-pointer hover:bg-gray-100"
+      className="bg-gray-800 border-1 border-white/20 rounded-xl p-3 shadow-sm cursor-pointer hover:bg-gray-800"
       onClick={() => abrirModal(data)}
     >
       <p className="text-sm font-medium capitalize">
@@ -660,8 +668,10 @@ function formatarTempo(segundos: number) {
     </div>
   ))}
 </div>
+</section>
           </CardContent>
         </Card>
+        
          {modalAberto && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div className="bg-white p-6 rounded-xl w-[90%] md:w-[500px]">
@@ -694,11 +704,17 @@ function formatarTempo(segundos: number) {
       >
         Fechar
       </button>
+      
     </div>
+    
   </div>
+  
 )}
+
       </main>
+      
       </div>
+      
     </div>
   );
 }

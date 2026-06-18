@@ -81,12 +81,12 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
   };
 
   return (
-    <div className="min-h-screen p-6 h-350 bg-gradient-to-b from-gray-950 to-gray-950 text-white">
+    <div className=" w-full min-h-screen p-6 bg-gradient-to-b from-gray-950 to-gray-950 text-white">
       <h1 className="text-2xl font-bold mb-4">
         Perfil do Usuário
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-gray-800 text-white">
           <CardContent className="p-4">
             <h2 className="font-semibold">Dados</h2>
@@ -146,18 +146,18 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
           </Card>
         <Card className="mt-6 bg-gray-800 text-white">
           <CardContent>
-          <div className="bg-gray-800  rounded text-white">
-            <p className="mr-2 font-semibold mb-7">Busca avançada de treinos</p>
-        <div className="gap-2 mb-4 text-lg bg-gray-700 text-white p-2 rounded border w-70">
+          <div className="bg-gray-800 border-0  rounded text-white">
+            <p className="mr-2 font-semibold mb-7 border-0">Busca avançada de treinos</p>
+        <div className=" border-0 gap-2 mb-4 text-xm text-center bg-gray-700 text-white rounded ">
  <select
-  className=" text-whitep-2 rounded h-11"
+  className="w-full border-0 rounded h-13 text-center"
   onChange={(e) => setMes(Number(e.target.value))}
 >
-  <option className="text-black" value="">Escolha o mês</option>
-  <option className="text-black" value="0">Janeiro</option>
-  <option className="text-black" value="1">Fevereiro</option>
-  <option className="text-black" value="2">Março</option>
-  <option className="text-black" value="3">Abril</option>
+  <option className="border-0 text-black" value="">Escolha o mês</option>
+  <option className="border-0 text-black" value="0">Janeiro</option>
+  <option className="border-0 text-black" value="1">Fevereiro</option>
+  <option className="border-0 text-black" value="2">Março</option>
+  <option className="border-0 text-black" value="3">Abril</option>
   <option className="text-black" value="4">Maio</option>
   <option className="text-black" value="5">Junho</option>
   <option className="text-black" value="6">Julho</option>
@@ -195,7 +195,7 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
 
 </div>
  <button
-    className="bg-gray-700 text-white px-4 rounded w-60 h-10 mt-5 border"
+    className="bg-gray-700 text-white px-4 rounded w-60 h-10 mt-5 border mb-30"
     onClick={async () => {
   const user = getUsuarioAtual();
   if (!user) {

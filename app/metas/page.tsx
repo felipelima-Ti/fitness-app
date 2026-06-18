@@ -144,7 +144,7 @@ export default function MetasPage() {
             type="date"
             value={inicio}
             onChange={(e) => setInicio(e.target.value)}
-            className="p-2 rounded bg-gray-800 border border-gray-700 w-full"
+            className=" text-white [color-scheme:dark] p-2 rounded bg-gray-800 border border-gray-700 w-full"
             required
           />
         </div>
@@ -155,7 +155,7 @@ export default function MetasPage() {
             type="date"
             value={termino}
             onChange={(e) => setTermino(e.target.value)}
-            className="p-2 rounded bg-gray-800 border border-gray-700 w-full mb-5"
+            className=" text-white [color-scheme:dark] p-2 rounded bg-gray-800 border border-gray-700 w-full mb-5"
             required
           />
         </div>
