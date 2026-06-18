@@ -1,11 +1,15 @@
 "use client";
+"use client";
 
+import { useEffect } from "react";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { registrarUsuario, loginUsuario } from "@/lib/services/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import "./style.css";
-import { useRouter } from "next/navigation";
+
 
 
 
@@ -16,7 +20,15 @@ export default function Login() {
   const [nome, setNome] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+useEffect(() => {
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user) {
+        router.replace("/home");
+      }
+    });
 
+    return () => unsub();
+  }, [router]);
   async function handleSubmit() {
   if (!email || !senha || (modoCadastro && !nome)) {
     alert("Preencha todos os campos");
@@ -42,7 +54,7 @@ export default function Login() {
   return (
    
   <div className="fundo-academia min-h-screen flex items-center justify-center bg-gray-900 ">
-      <Card className="w-full max-w-120 h-110 shadow-xl rounded-2xl bg-gray-100 border-4 border-gray-300 m-3">
+      <Card className="w-full max-w-120 h-110 shadow-xl rounded-2xl bg-gray-100/90 border-4 border-gray-300 m-3">
         <CardContent className="p-6 space-y-4">
           <h1 className="text-2xl font-bold text-center">
             {modoCadastro ? "Criar Conta" : "Entrar"}

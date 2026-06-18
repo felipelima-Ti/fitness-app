@@ -1,7 +1,14 @@
 .fundo-academia {
-  background-image: url('/background.png');
+  background-image: url('/Mfitness2.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .fundo-academia {
+    background-image: url('/Mfitness2mobile2.png');
+  }
 }

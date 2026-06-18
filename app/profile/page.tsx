@@ -9,7 +9,9 @@ import type { Treino } from "@/lib/services/treino";
 import { gerarGraficoUltimos7Dias } from "@/lib/utils/grafico";
 import { getUsuarioAtual } from "@/lib/services/user";
 import { auth } from "@/lib/firebase";
-
+import { buscarUsuario } from "@/lib/services/buscarNome";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 import {
   Chart as ChartJS,
@@ -39,10 +41,18 @@ const [mes, setMes] = useState<number>(new Date().getMonth());
 const [ano, setAno] = useState<number>(new Date().getFullYear());
 const [treinosMes, setTreinosMes] = useState<Treino[]>([]);
 const [analiseMes, setAnaliseMes] = useState<any>(null);
-
+const [nome, setNome] = useState("");
   const [treinos, setTreinos] = useState<Treino[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const router = useRouter();
+  const logout = async () => {
+  try {
+    await signOut(auth);
+    router.replace("/login");
+  } catch (error) {
+    console.error("Erro ao sair:", error);
+  }
+};
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -50,10 +60,29 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
         setTreinos(dados);
         setLoading(false);
       }
+    
     });
+    
 
     return () => unsub();
   }, []);
+    useEffect(() => {
+  const unsub = auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      const dadosUsuario = await buscarUsuario(user.uid);
+
+      if (dadosUsuario) {
+        setNome(dadosUsuario.nome);
+      }
+
+      const dados = await buscarTodosTreinos();
+      setTreinos(dados);
+      setLoading(false);
+    }
+  });
+
+  return () => unsub();
+}, []);
 
   const totalCalorias = treinos.reduce(
     (acc, t) => acc + t.calorias,
@@ -82,9 +111,24 @@ const [analiseMes, setAnaliseMes] = useState<any>(null);
 
   return (
     <div className=" w-full min-h-screen p-6 bg-gradient-to-b from-gray-950 to-gray-950 text-white">
-      <h1 className="text-2xl font-bold mb-4">
-        Perfil do Usuário
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+  <div>
+    <h1 className="text-2xl font-bold">
+      Perfil do Usuário
+    </h1>
+
+    <h2 className="text-lg text-gray-300">
+      Olá, {nome}
+    </h2>
+  </div>
+
+  <button
+    onClick={logout}
+    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white font-semibold"
+  >
+    Sair
+  </button>
+</div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-gray-800 text-white">

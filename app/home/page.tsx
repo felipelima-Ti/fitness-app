@@ -17,6 +17,7 @@ import Link from "next/link";
 import { buscarMetas } from "@/lib/services/buscarMetas";
 import { calcularProgressoMeta } from "@/lib/utils/progressoMeta";
 import { excluirMeta } from "@/lib/services/excluirMeta";
+import AuthGuard from "../../components/AuthGuard";
 
 export function filtrarTreinosAvancado(
   treinos: Treino[],
@@ -328,6 +329,7 @@ function formatarTempo(segundos: number) {
   setTempoAtivo(0);
 }
   return (
+     <AuthGuard>
     <div className="min-h-screen">
       {/* Header */}
    <header className="fixed top-0 left-0 w-full bg-black text-white px-6 py-4 flex justify-between items-center z-50">
@@ -716,5 +718,6 @@ function formatarTempo(segundos: number) {
       </div>
       
     </div>
+    </AuthGuard>
   );
 }
