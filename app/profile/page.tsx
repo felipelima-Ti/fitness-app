@@ -12,6 +12,7 @@ import { auth } from "@/lib/firebase";
 import { buscarUsuario } from "@/lib/services/buscarNome";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import AuthGuard from "../../components/AuthGuard";
 
 import {
   Chart as ChartJS,
@@ -110,6 +111,7 @@ const [nome, setNome] = useState("");
   };
 
   return (
+    <AuthGuard>
     <div className=" w-full min-h-screen p-6 bg-gradient-to-b from-gray-950 to-gray-950 text-white">
       <div className="flex justify-between items-center mb-6">
   <div>
@@ -258,5 +260,6 @@ const [nome, setNome] = useState("");
   </Card>
   </div> 
     </div>
+    </AuthGuard>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import AuthGuard from "../../components/AuthGuard";
 import { useState, useEffect } from "react";
 import { db, auth } from "@/lib/firebase";
 import {
@@ -22,7 +22,7 @@ export default function MetasPage() {
 
   const usuario = auth.currentUser;
 
-  // 🔥 Função para buscar metas do banco
+  //  Função para buscar metas do banco
   const carregarMetas = async () => {
     if (!usuario) return;
 
@@ -45,7 +45,7 @@ export default function MetasPage() {
     setMetas(lista);
   };
 
-  // 🔥 Salvar meta no Firestore
+  // Salvar meta no Firestore
   const salvarMeta = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -89,6 +89,7 @@ export default function MetasPage() {
   }, [usuario]);
 
   return (
+    <AuthGuard>
     <div className="min-h-screen bg-gray-950 text-white p-6 flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-6 text-blue-400 mt-30">
         Definir Meta de Treino
@@ -168,7 +169,7 @@ export default function MetasPage() {
         </button>
       </form>
 
-      {/* 🔥 Renderização das metas salvas */}
+      {/*  Renderização das metas salvas */}
       <div className="w-full max-w-200 space-y-4 p-5">
         <p className="mb-5"><b className="p-5">Minhas metas salvas</b></p>
         
@@ -195,5 +196,6 @@ export default function MetasPage() {
         )}
       </div>
     </div>
+    </AuthGuard>
   );
 }
